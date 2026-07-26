@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="boot" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="backendStudenti" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.stopcode1.backendstudenti.BackendStudentiApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
