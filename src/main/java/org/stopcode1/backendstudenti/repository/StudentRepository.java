@@ -47,6 +47,16 @@ public class StudentRepository {
             WHERE idStudent = ?
             """;
 
+    private final static String UPDATE_BY_ID = """
+            UPDATE studenti
+            SET firstName = ?,
+                lastName = ?,
+                matricola = ?,
+                age = ?,
+                university = ?
+            WHERE idStudent = ?
+            """;
+
     private final RowMapper<Student> ROW_MAPPER_STUDENT =
             (rs, rowNum) -> {
                 return new Student(
@@ -111,18 +121,29 @@ public class StudentRepository {
 
     }
 
-    public boolean checkMatricola(String matricola) {
+    public boolean existsByMatricola(String matricola) {
 
             Integer count = jdbcTemplate.queryForObject(CHECK_MATRICOLA, Integer.class, matricola);
             if(count > 0) {
-                return false;
+                return true;
             }
-            return true;
+            return false;
 
     }
 
-    public int removeById(long id) {
+    public int deleteById(long id) {
         return jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    public int update(Student student) {
+        return jdbcTemplate.update(UPDATE_BY_ID,
+                student.getFirstName(),
+                student.getLastName(),
+                student.getMatricola(),
+                student.getAge(),
+                student.getUniversity(),
+                student.getId()
+        );
     }
 
 }

@@ -29,7 +29,8 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException("Studente con "+id+ " non trovato"));
     }
 
-    public void createStudent(StudentRequest studentRequest) {
+    @Transactional
+    public Student createStudent(StudentRequest studentRequest) {
         Student student = new Student();
         student.setFirstName(studentRequest.firstName());
         student.setLastName(studentRequest.lastName());
@@ -37,24 +38,44 @@ public class StudentService {
         student.setAge(studentRequest.age());
         student.setUniversity(studentRequest.university());
 
-        if(isExistsByMatricola(student.getMatricola())) {
+        if(existsByMatricola(student.getMatricola())) {
             throw new ConflictStudentException("Studente con matricola "+student.getMatricola()+" gia esistente");
         }
-        studentRepository.save(student);
+        long idStudent = studentRepository.save(student);
+        student.setId(idStudent);
+        return student;
     }
 
-    public boolean isExistsByMatricola(String matricola) {
-       return studentRepository.checkMatricola(matricola);
+    public boolean existsByMatricola(String matricola) {
+       return studentRepository.existsByMatricola(matricola);
 
     }
 
-    public boolean deleteById(long id) {
-        int affectedRows =  studentRepository.removeById(id);
+    public void deleteById(long id) {
+        int affectedRows =  studentRepository.deleteById(id);
         if (affectedRows == 0) {
             throw new StudentNotFoundException("Studente non disponibile");
         }
-        return true;
     }
+
+    public void update(long id, StudentRequest studentRequest) {
+        Student student = new Student(
+                id,
+                studentRequest.firstName(),
+                studentRequest.lastName(),
+                studentRequest.matricola(),
+                studentRequest.age(),
+                studentRequest.university()
+                );
+        int affectedRows = studentRepository.update(student);
+
+        if(affectedRows == 0) {
+            throw new StudentNotFoundException("Studente con id " + id + " non trovato");
+        }
+
+    }
+
+
 
 
 
