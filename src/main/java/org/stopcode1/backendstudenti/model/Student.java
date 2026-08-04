@@ -1,11 +1,13 @@
 package org.stopcode1.backendstudenti.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 
-
+@JsonIgnoreProperties(ignoreUnknown = false)
 public class Student {
     private Long id;
 
@@ -16,6 +18,10 @@ public class Student {
     private String lastName;
 
     @NotBlank(message = "Matricola obbligatorio")
+    @Pattern(
+            regexp = "^[0-9]{8,}$",
+            message = "La matricola deve contenere solo numeri e deve essere lunga almeno 8 caratteri"
+    )
     private String matricola;
 
     @NotNull(message = "Eta obbligatorio")
@@ -24,6 +30,10 @@ public class Student {
 
     @NotBlank(message = "Universita obbligatoria")
     private String university;
+
+    public Student() {
+
+    }
 
     public Student(Long id, String firstName, String lastName, String matricola, Integer age, String university) {
         setId(id);
@@ -34,9 +44,7 @@ public class Student {
         setUniversity(university);
     }
 
-    public Student() {
 
-    }
 
 
     public Long getId() {
