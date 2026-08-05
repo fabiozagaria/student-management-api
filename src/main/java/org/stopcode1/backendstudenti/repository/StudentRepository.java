@@ -36,11 +36,6 @@ public class StudentRepository {
             VALUES (?, ?, ?, ?, ?)
             """;
 
-    private final static String CHECK_MATRICOLA = """
-            SELECT COUNT(*)
-            FROM studenti
-            WHERE matricola = ?
-            """;
 
     private final static String DELETE_BY_ID = """
             DELETE
@@ -122,15 +117,6 @@ public class StudentRepository {
 
     }
 
-    public boolean existsByMatricola(String matricola) {
-
-            Integer count = jdbcTemplate.queryForObject(CHECK_MATRICOLA, Integer.class, matricola);
-            if(count > 0) {
-                return true;
-            }
-            return false;
-
-    }
 
     public int deleteById(long id) {
         return jdbcTemplate.update(DELETE_BY_ID, id);

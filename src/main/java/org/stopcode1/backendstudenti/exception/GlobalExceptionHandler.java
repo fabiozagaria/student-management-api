@@ -2,6 +2,7 @@ package org.stopcode1.backendstudenti.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -52,6 +53,25 @@ public class GlobalExceptionHandler {
 
     }
 
+    //409
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<APIError> handleDuplicateKey(
+            DuplicateKeyException exception,
+            HttpServletRequest request
+    )
+    {
+        HttpStatus status = HttpStatus.CONFLICT;
+        APIError apiError = new APIError(
+                Instant.now(),
+                "DUPLICATE_KEY",
+                request.getRequestURI(),
+                exception.getMessage(),
+                status
+        );
+
+        return new ResponseEntity<>(apiError, status);
+    }
+
     //400
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<APIErrorValidation> handleMethodArgumentNotValid(
@@ -71,6 +91,8 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(apiError, status);
     }
+
+
 
     //500
     @ExceptionHandler(DatabaseException.class)

@@ -1,5 +1,6 @@
 package org.stopcode1.backendstudenti.service;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.stopcode1.backendstudenti.dto.StudentRequest;
@@ -31,9 +32,7 @@ public class StudentService {
 
     @Transactional
     public Student createStudent(StudentRequest studentRequest) {
-        if(existsByMatricola(studentRequest.matricola())) {
-            throw new ConflictStudentException("Studente con matricola "+studentRequest.matricola()+" gia esistente");
-        }
+
 
         Student student = new Student();
         student.setFirstName(studentRequest.firstName());
@@ -46,10 +45,7 @@ public class StudentService {
         return student;
     }
 
-    public boolean existsByMatricola(String matricola) {
-       return studentRepository.existsByMatricola(matricola);
 
-    }
 
     public void deleteById(long id) {
         int affectedRows =  studentRepository.deleteById(id);
@@ -68,7 +64,7 @@ public class StudentService {
 
     }
 
-    public Student toStudent(long id, StudentRequest studentRequest) {
+    private Student toStudent(long id, StudentRequest studentRequest) {
         return new Student(
                 id,
                 studentRequest.firstName(),

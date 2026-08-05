@@ -50,7 +50,7 @@ public class StudentController {
             HttpServletRequest request
             ) {
         Student newStudent = studentService.createStudent(studentRequest);
-        return ResponseEntity.created(URI.create(request.getRequestURI())).body(newStudent);
+        return ResponseEntity.created(URI.create(request.getRequestURI()+ "/" + newStudent.getId())).body(newStudent);
 
     }
 
@@ -64,7 +64,7 @@ public class StudentController {
 
     }
 
-    @DeleteMapping
+    @DeleteMapping("/student/{id}")
     public ResponseEntity<Void> deleteStudent(
             @PathVariable(name = "id") long id
     ) {
