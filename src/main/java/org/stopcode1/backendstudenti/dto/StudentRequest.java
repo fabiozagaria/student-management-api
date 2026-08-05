@@ -27,4 +27,6 @@ public record StudentRequest(
 
         @NotBlank(message = "Universita obbligatoria")
         String university
-) {}
+) {
+
+}

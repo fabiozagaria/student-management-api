@@ -31,16 +31,16 @@ public class StudentService {
 
     @Transactional
     public Student createStudent(StudentRequest studentRequest) {
+        if(existsByMatricola(studentRequest.matricola())) {
+            throw new ConflictStudentException("Studente con matricola "+studentRequest.matricola()+" gia esistente");
+        }
+
         Student student = new Student();
         student.setFirstName(studentRequest.firstName());
         student.setLastName(studentRequest.lastName());
         student.setMatricola(studentRequest.matricola());
         student.setAge(studentRequest.age());
         student.setUniversity(studentRequest.university());
-
-        if(existsByMatricola(student.getMatricola())) {
-            throw new ConflictStudentException("Studente con matricola "+student.getMatricola()+" gia esistente");
-        }
         long idStudent = studentRepository.save(student);
         student.setId(idStudent);
         return student;
@@ -59,20 +59,24 @@ public class StudentService {
     }
 
     public void update(long id, StudentRequest studentRequest) {
-        Student student = new Student(
-                id,
-                studentRequest.firstName(),
-                studentRequest.lastName(),
-                studentRequest.matricola(),
-                studentRequest.age(),
-                studentRequest.university()
-                );
+        Student student = toStudent(id, studentRequest);
         int affectedRows = studentRepository.update(student);
 
         if(affectedRows == 0) {
             throw new StudentNotFoundException("Studente con id " + id + " non trovato");
         }
 
+    }
+
+    public Student toStudent(long id, StudentRequest studentRequest) {
+        return new Student(
+                id,
+                studentRequest.firstName(),
+                studentRequest.lastName(),
+                studentRequest.matricola(),
+                studentRequest.age(),
+                studentRequest.university()
+        );
     }
 
 
