@@ -1,17 +1,13 @@
 package org.stopcode1.backendstudenti.service;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.stopcode1.backendstudenti.dto.StudentRequest;
-import org.stopcode1.backendstudenti.exception.ConflictStudentException;
 import org.stopcode1.backendstudenti.exception.StudentNotFoundException;
 import org.stopcode1.backendstudenti.model.Student;
 import org.stopcode1.backendstudenti.repository.StudentRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {

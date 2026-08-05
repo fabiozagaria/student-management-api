@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class StudentController {
     private final StudentService studentService;
 
@@ -36,7 +36,7 @@ public class StudentController {
         return ResponseEntity.ok(studentList);
     }
 
-    @GetMapping("/student/{id}")
+    @GetMapping("/students/{id}")
     public ResponseEntity<Student> getStudentById(
             @PathVariable(name = "id") long id
     ) {
@@ -44,7 +44,7 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @PostMapping("/student")
+    @PostMapping("/students")
     public ResponseEntity<Student> postStudent(
             @Valid @RequestBody StudentRequest studentRequest,
             HttpServletRequest request
@@ -54,7 +54,7 @@ public class StudentController {
 
     }
 
-    @PutMapping("/student/{id}")
+    @PutMapping("/students/{id}")
     public ResponseEntity<Void> putStudent(
             @PathVariable(name = "id") long id,
             @Valid @RequestBody StudentRequest studentRequest
@@ -64,7 +64,7 @@ public class StudentController {
 
     }
 
-    @DeleteMapping("/student/{id}")
+    @DeleteMapping("/students/{id}")
     public ResponseEntity<Void> deleteStudent(
             @PathVariable(name = "id") long id
     ) {

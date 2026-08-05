@@ -1,18 +1,14 @@
 package org.stopcode1.backendstudenti.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.net.URI;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
@@ -55,6 +51,7 @@ public class GlobalExceptionHandler {
 
     //409
     @ExceptionHandler(DuplicateKeyException.class)
+
     public ResponseEntity<APIError> handleDuplicateKey(
             DuplicateKeyException exception,
             HttpServletRequest request
