@@ -1,18 +1,28 @@
 # Student Management API
 
-REST API per la gestione di studenti, sviluppata con Spring Boot, JDBC Template e MySQL. Il progetto applica una struttura a livelli, validazione delle richieste e gestione centralizzata degli errori.
+REST API per la gestione persistente di studenti, sviluppata con Spring Boot, JDBC Template e MySQL. Il progetto applica un'architettura a livelli, validazione dei payload e gestione centralizzata degli errori.
+
+## Competenze dimostrate
+
+- progettazione di endpoint REST coerenti;
+- separazione tra controller, service e repository;
+- accesso al database con query SQL parametrizzate;
+- mapping manuale tra righe SQL e oggetti Java;
+- DTO dedicato alle richieste;
+- validazione Jakarta Bean Validation;
+- transazioni applicative;
+- gestione uniforme degli errori HTTP;
+- recupero delle chiavi generate dal database.
 
 ## Funzionalità
 
-- creazione, lettura, aggiornamento ed eliminazione degli studenti;
-- persistenza su MySQL tramite `JdbcTemplate`;
-- recupero dell'identificativo generato dal database;
-- DTO di input separato dal modello;
-- validazione Jakarta Bean Validation;
-- rifiuto delle proprietà JSON sconosciute;
-- gestione centralizzata degli errori `400`, `404`, `409` e `500`;
-- transazione sulla creazione dello studente;
-- gestione della matricola duplicata tramite vincolo del database.
+- elenco di tutti gli studenti;
+- ricerca di uno studente per identificativo;
+- creazione di un nuovo studente;
+- aggiornamento completo dei dati;
+- eliminazione;
+- gestione della matricola duplicata;
+- rifiuto delle proprietà JSON non previste.
 
 ## Tecnologie
 
@@ -26,26 +36,29 @@ REST API per la gestione di studenti, sviluppata con Spring Boot, JDBC Template 
 
 ## Architettura
 
-```text
-controller → service → repository → MySQL
-                ↓
-         exception handler
+```mermaid
+flowchart LR
+    Client --> Controller
+    Controller --> Service
+    Service --> Repository
+    Repository --> MySQL
+    Service --> ErrorHandler
 ```
 
-- `StudentController`: espone gli endpoint HTTP;
-- `StudentService`: contiene la logica applicativa e coordina le operazioni;
-- `StudentRepository`: esegue query SQL parametrizzate con `JdbcTemplate`;
-- `StudentRequest`: definisce e valida il payload in ingresso;
-- `GlobalExceptionHandler`: restituisce risposte di errore coerenti.
+- `StudentController`: gestisce il contratto HTTP;
+- `StudentService`: applica la logica e coordina le operazioni;
+- `StudentRepository`: esegue le query tramite `JdbcTemplate`;
+- `StudentRequest`: definisce e valida il payload;
+- `GlobalExceptionHandler`: converte le eccezioni in risposte coerenti.
 
 ## Endpoint
 
-| Metodo | Endpoint | Descrizione | Risposta |
+| Metodo | Endpoint | Descrizione | Risposta principale |
 |---|---|---|---|
-| `GET` | `/api/v1/students` | Elenca tutti gli studenti | `200 OK` |
-| `GET` | `/api/v1/students/{id}` | Recupera uno studente | `200 OK` / `404 Not Found` |
+| `GET` | `/api/v1/students` | Elenca gli studenti | `200 OK` |
+| `GET` | `/api/v1/students/{id}` | Recupera uno studente | `200 OK` |
 | `POST` | `/api/v1/students` | Crea uno studente | `201 Created` |
-| `PUT` | `/api/v1/students/{id}` | Sostituisce i dati di uno studente | `204 No Content` |
+| `PUT` | `/api/v1/students/{id}` | Aggiorna uno studente | `204 No Content` |
 | `DELETE` | `/api/v1/students/{id}` | Elimina uno studente | `204 No Content` |
 
 ### Payload di esempio
@@ -60,7 +73,16 @@ controller → service → repository → MySQL
 }
 ```
 
-Regole principali: nome, cognome e università sono obbligatori; la matricola deve contenere almeno otto cifre; l'età deve essere almeno `18`.
+Nome, cognome e università sono obbligatori. La matricola deve contenere almeno otto cifre e l'età deve essere almeno `18`.
+
+## Error handling
+
+L'API restituisce risposte strutturate per:
+
+- payload non validi: `400 Bad Request`;
+- studente inesistente: `404 Not Found`;
+- matricola duplicata: `409 Conflict`;
+- errore di persistenza: `500 Internal Server Error`.
 
 ## Database
 
@@ -81,14 +103,9 @@ CREATE TABLE studenti (
 );
 ```
 
-## Configurazione e avvio
+## Configurazione
 
-### Requisiti
-
-- JDK 21
-- MySQL
-
-Configura la connessione in `src/main/resources/application.properties` usando credenziali locali. Prima di rendere pubblico il repository, sostituisci i valori personali con variabili d'ambiente o un profilo di esempio.
+Configura la connessione in `src/main/resources/application.properties`. Non inserire credenziali reali nel repository. Per ambienti condivisi è consigliato usare variabili d'ambiente:
 
 ```properties
 spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/gestionale_studenti}
@@ -96,24 +113,25 @@ spring.datasource.username=${DB_USERNAME:root}
 spring.datasource.password=${DB_PASSWORD:}
 ```
 
-Avvio su Linux o macOS:
+## Avvio
+
+### Requisiti
+
+- JDK 21
+- MySQL
 
 ```bash
+git clone https://github.com/fabiozagaria/student-management-api.git
+cd student-management-api
 ./mvnw spring-boot:run
 ```
 
-Avvio su Windows:
+Su Windows utilizza `mvnw.cmd spring-boot:run`. Il servizio sarà disponibile su `http://localhost:8080`.
 
-```powershell
-mvnw.cmd spring-boot:run
-```
+## Limiti e sviluppi successivi
 
-Il servizio sarà disponibile su `http://localhost:8080`.
-
-## Stato e prossimi passi
-
-Il progetto è un esercizio backend completo sul flusso JDBC. Evoluzioni previste: test automatici, documentazione OpenAPI, Spring Security e autenticazione.
+L'API non implementa ancora autenticazione o autorizzazione. I prossimi passi previsti sono test automatici, documentazione OpenAPI e Spring Security con access token e refresh token.
 
 ## Autore
 
-Sviluppato da [Fabio Zagaria](https://github.com/fabiozagaria).
+Fabio Zagaria — progetto backend sviluppato durante il percorso LabForWeb.
