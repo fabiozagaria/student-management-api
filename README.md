@@ -2,6 +2,10 @@
 
 REST API per la gestione persistente di studenti, sviluppata con Spring Boot, JDBC Template e MySQL. Il progetto applica un'architettura a livelli, validazione dei payload e gestione centralizzata degli errori.
 
+## Stato e ruolo
+
+**Laboratorio JDBC consultabile; nessuna espansione di prodotto attiva.** La scelta caratterizzante è SQL esplicito con `JdbcTemplate`, query parametrizzate, mapping manuale e transazioni. Gli approfondimenti vengono svolti come esercizi mirati; JPA e autorizzazione hanno repository dedicati.
+
 ## Competenze dimostrate
 
 - progettazione di endpoint REST coerenti;
@@ -105,7 +109,9 @@ CREATE TABLE studenti (
 
 ## Configurazione
 
-Configura la connessione in `src/main/resources/application.properties`. Non inserire credenziali reali nel repository. Per ambienti condivisi è consigliato usare variabili d'ambiente:
+La configurazione corrente punta a MySQL locale e al database `gestionale_studenti`. Per avviare con credenziali proprie senza versionarle, Spring Boot accetta `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`.
+
+Il seguente esempio è una configurazione alternativa da adottare esplicitamente, non la dichiarazione dei placeholder attualmente presenti nel file:
 
 ```properties
 spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/gestionale_studenti}
@@ -130,7 +136,9 @@ Su Windows utilizza `mvnw.cmd spring-boot:run`. Il servizio sarà disponibile su
 
 ## Limiti e sviluppi successivi
 
-L'API non implementa ancora autenticazione o autorizzazione. I prossimi passi previsti sono test automatici, documentazione OpenAPI e Spring Security con access token e refresh token.
+L'API non implementa autenticazione o autorizzazione; la suite presente non dimostra una copertura completa del CRUD.
+
+Se il laboratorio viene ripreso, scegliere una sola prova SQL: per esempio una JOIN dopo un'estensione minima dello schema, un vincolo o un rollback verificabile. OpenAPI e Security restano evoluzioni facoltative, non una roadmap obbligatoria. La scelta `JdbcTemplate` viene mantenuta; cascade e `mappedBy` appartengono a JPA, non a questo mapping manuale.
 
 ## Autore
 
